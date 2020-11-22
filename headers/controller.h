@@ -1,10 +1,10 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include <QList>
-#include <QTextStream>
-
 #include "dataModel.h"
+#include "filter.h"
+
+#include <QTextStream>
 
 class Controller {
 private:
@@ -13,7 +13,7 @@ private:
     QSet<QString> levelLabels;
 public:
     Controller(QTextStream &logContents);
-    QList<LogEntry> getFiltered(Filter filter);
+    QList<LogEntry> getFiltered(const Filter &filter = Filter());
     QSet<QString> getModules();
     QSet<QString> getLevels();
 private:

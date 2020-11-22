@@ -1,13 +1,6 @@
 #include "headers/mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QFileDialog>
-#include <QFile>
-#include <QTextStream>
-#include <QDebug>
-#include <QString>
-
-
 #include <headers/controller.h>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -26,15 +19,4 @@ MainWindow::~MainWindow()
 void MainWindow::on_openButton_clicked()
 {
     //QString fileName = QFileDialog::getOpenFileName(this);
-    QString fileName = "/home/giubots/Desktop/bbque.log";
-    if (!fileName.isEmpty()) {
-        QFile inputFile(fileName);
-        qDebug() << fileName;
-        if (inputFile.open(QIODevice::ReadOnly))
-        {
-            QTextStream in(&inputFile);
-            auto c = Controller(in);
-            inputFile.close();
-        } else qDebug() << "no file";
-    }
 }

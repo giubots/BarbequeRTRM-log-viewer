@@ -1,13 +1,22 @@
+#include "headers/controller.h"
+
 #include <QDebug>
 #include <QRegularExpression>
-#include <QDateTime>
-
-#include "headers/controller.h"
 
 Controller::Controller(QTextStream &logContents) : entries(), moduleLabels(), levelLabels() {parse(logContents);}
 
-QList<LogEntry> Controller::getFiltered(Filter filter) {
-    //TODO!
+QList<LogEntry> Controller::getFiltered(const Filter &filter) {
+    QList<LogEntry> answer;
+    for (LogEntry entry : entries) {
+        if ((filter.startDateTime.isValid() && entry.dateTime < filter.startDateTime)
+                || (filter.endDateTime.isValid() && entry.dateTime > filter.endDateTime)
+                || (!filter.levels.isEmpty() && !filter.levels.contains(entry.level))
+                || (!filter.modules.isEmpty() && !filter.modules.contains(entry.module))
+                || (!filter.text.isEmpty() && !entry.text.contains(filter.text)))
+            continue;
+        answer.append(entry);
+    }
+    return answer;
 }
 
 QSet<QString> Controller::getModules() {return moduleLabels;}
@@ -16,11 +25,6 @@ QSet<QString> Controller::getLevels() {return levelLabels;}
 
 void Controller::parse(QTextStream &logContents) {
     qDebug() << "Starting to parse";
-
-    // Clear previous values if necessaruy
-    entries.clear();
-    moduleLabels.clear();
-    levelLabels.clear();
 
     //Parse each line in the file
     while (!logContents.atEnd()) {
