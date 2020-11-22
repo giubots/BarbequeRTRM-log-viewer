@@ -8,23 +8,21 @@
 
 class LogLevel {
 public:
-    static const LogLevel INFO, NOTICE, WARN, ERROR, CRIT, ALERT, FATAL;
-    QString getName() {return this->name;}
-    QColor getColor() {return this->color;}
-    friend QDataStream &operator<<(QDataStream &stream, const LogLevel &level) {return stream << level.name;}
+    static const LogLevel DEBUG, INFO, NOTICE, WARN, ERROR, CRIT, ALERT, FATAL;
+    static const LogLevel values[];
 private:
     QString name;
     QColor color;
-    LogLevel(QString name, QColor color) : name(name), color(color) {};
+public:
+    QString getName();
+    QColor getColor();
+    static LogLevel fromString(const QString &string);
+    friend QDataStream &operator<<(QDataStream &stream, const LogLevel &level) {return stream << level.name;}
+private:
+    LogLevel(QString name, QColor color);
 };
 
-//const LogLevel LogLevel::INFO = LogLevel("INFO", Qt::green);
-//const LogLevel LogLevel::NOTICE = LogLevel("NOTICE", Qt::blue);
-//const LogLevel LogLevel::WARN = LogLevel("NOTICE", Qt::yellow);
-//const LogLevel LogLevel::ERROR = LogLevel("ERROR", Qt::darkRed);
-//const LogLevel LogLevel::CRIT = LogLevel("CRIT", Qt::darkRed);
-//const LogLevel LogLevel::ALERT = LogLevel("ALERT", Qt::darkYellow);
-//const LogLevel LogLevel::FATAL = LogLevel("FATAL", Qt::red);
+
 
 struct LogEntry {
     QDateTime dateTime;

@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     src/controller.cpp \
+    src/dataModel.cpp \
     src/main.cpp \
     src/mainwindow.cpp
 

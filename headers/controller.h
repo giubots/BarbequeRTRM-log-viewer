@@ -1,21 +1,23 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include "dataModel.h"
-
 #include <QList>
 #include <QTextStream>
 
-class Controller
-{
+#include "dataModel.h"
+
+class Controller {
+private:
+    QList<LogEntry> entries;
+    QSet<QString> moduleLabels;
+    QSet<QString> levelLabels;
 public:
     Controller(QTextStream &logContents);
     QList<LogEntry> getFiltered(Filter filter);
-    QList<QString> getModules();
-    QList<QString> getLevels();
+    QSet<QString> getModules();
+    QSet<QString> getLevels();
 private:
-    QList<LogEntry> entries;
-    QList<QString> modules;
     void parse(QTextStream &logContents);
 };
+
 #endif // CONTROLLER_H

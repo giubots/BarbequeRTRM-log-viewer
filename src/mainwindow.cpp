@@ -25,14 +25,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_openButton_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this);
+    //QString fileName = QFileDialog::getOpenFileName(this);
+    QString fileName = "/home/giubots/Desktop/bbque.log";
     if (!fileName.isEmpty()) {
         QFile inputFile(fileName);
+        qDebug() << fileName;
         if (inputFile.open(QIODevice::ReadOnly))
         {
-           QTextStream in(&inputFile);
-           auto c = Controller(in);
-           inputFile.close();
+            QTextStream in(&inputFile);
+            auto c = Controller(in);
+            inputFile.close();
         } else qDebug() << "no file";
     }
 }
