@@ -25,5 +25,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Controller contr;
+private:
+    void updateTable(QList<LogEntry> entries);
 };
 #endif // MAINWINDOW_H

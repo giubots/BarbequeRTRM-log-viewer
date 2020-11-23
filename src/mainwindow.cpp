@@ -32,9 +32,15 @@ void MainWindow::on_openButton_clicked() {
         } else qDebug() << "Impossible to open: " << fileName;
         inputFile.close();
     }
+    updateTable(contr.getFiltered());
+}
 
-    auto entries = contr.getFiltered();
+void MainWindow::on_filterEdit_textChanged(const QString &text) {
+    updateTable(contr.getFiltered(Filter().contains(text)));
+}
 
+void MainWindow::updateTable(QList<LogEntry> entries)
+{
     ui->tableWidget->setColumnCount(4);
     ui->tableWidget->setRowCount(entries.size());
     for (int i=0; i<entries.size(); i++) {
@@ -44,11 +50,4 @@ void MainWindow::on_openButton_clicked() {
         ui->tableWidget->setItem(i, 2, new QTableWidgetItem(entry.module));
         ui->tableWidget->setItem(i, 3, new QTableWidgetItem(entry.text));
     }
-    ui->tableWidget->update();
-
-}
-
-void MainWindow::on_filterEdit_textChanged(const QString &arg1)
-{
-
 }
