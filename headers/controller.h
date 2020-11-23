@@ -2,7 +2,6 @@
 #define CONTROLLER_H
 
 #include "dataModel.h"
-#include "filter.h"
 
 #include <QTextStream>
 
