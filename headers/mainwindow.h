@@ -19,8 +19,9 @@ public:
 
 private slots:
     void on_openButton_clicked();
+    void on_resetButton_clicked();
 
-    void on_filterEdit_textChanged(const QString &arg1);
+    void on_filterEdit_textEdited(const QString &arg1);
 
 private:
     Ui::MainWindow *ui;

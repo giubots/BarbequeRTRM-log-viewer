@@ -35,10 +35,6 @@ void MainWindow::on_openButton_clicked() {
     updateTable(contr.getFiltered());
 }
 
-void MainWindow::on_filterEdit_textChanged(const QString &text) {
-    updateTable(contr.getFiltered(Filter().contains(text)));
-}
-
 void MainWindow::updateTable(QList<LogEntry> entries)
 {
     ui->tableWidget->setColumnCount(4);
@@ -50,4 +46,13 @@ void MainWindow::updateTable(QList<LogEntry> entries)
         ui->tableWidget->setItem(i, 2, new QTableWidgetItem(entry.module));
         ui->tableWidget->setItem(i, 3, new QTableWidgetItem(entry.text));
     }
+}
+
+void MainWindow::on_resetButton_clicked() {
+    ui->filterEdit->clear();
+    updateTable(contr.getFiltered());
+}
+
+void MainWindow::on_filterEdit_textEdited(const QString &text) {
+    updateTable(contr.getFiltered(Filter().contains(text)));
 }
