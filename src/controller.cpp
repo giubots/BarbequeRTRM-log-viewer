@@ -23,6 +23,8 @@ QSet<QString> Controller::getModules() {return moduleLabels;}
 
 QSet<QString> Controller::getLevels() {return levelLabels;}
 
+Controller::Controller() {}
+
 void Controller::parse(QTextStream &logContents) {
     qDebug() << "Starting to parse";
 
@@ -62,3 +64,11 @@ void Controller::parse(QTextStream &logContents) {
         levelLabels << level.getName();
     }
 }
+
+EmptyController::EmptyController() {}
+
+QList<LogEntry> EmptyController::getFiltered(const Filter &filter) {Q_UNUSED(filter); return QList<LogEntry>();}
+
+QSet<QString> EmptyController::getModules() {return QSet<QString>();}
+
+QSet<QString> EmptyController::getLevels() {return QSet<QString>();}

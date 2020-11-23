@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "controller.h"
+
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -18,7 +20,10 @@ public:
 private slots:
     void on_openButton_clicked();
 
+    void on_filterEdit_textChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
+    Controller contr;
 };
 #endif // MAINWINDOW_H

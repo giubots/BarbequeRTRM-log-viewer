@@ -14,7 +14,7 @@ private:
     QString name;
     QColor color;
 public:
-    QString getName();
+    QString getName() const;
     QColor getColor();
     static LogLevel fromString(const QString &string);
     friend QDataStream &operator<<(QDataStream &stream, const LogLevel &level) {return stream << level.name;}
@@ -35,6 +35,7 @@ struct LogEntry {
     friend QDataStream &operator<<(QDataStream &stream, const LogEntry &entry) {
         return stream << entry.dateTime << entry.level << entry.module << entry.text;
     }
+    QString toString() const;
 };
 
 class Filter {

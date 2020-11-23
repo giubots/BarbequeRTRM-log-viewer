@@ -15,7 +15,7 @@ const LogLevel LogLevel::FATAL = LogLevel("FATAL", Qt::red);
 const LogLevel LogLevel::values[] = {LogLevel::DEBUG, LogLevel::INFO, LogLevel::NOTICE, LogLevel::WARN, LogLevel::ERROR, LogLevel::CRIT, LogLevel::ALERT, LogLevel::FATAL};
 
 
-QString LogLevel::getName() {return this->name;}
+QString LogLevel::getName() const {return this->name;}
 
 QColor LogLevel::getColor() {return this->color;}
 
@@ -57,4 +57,8 @@ Filter &Filter::onlyModules(QSet<QString> modules) {
 Filter &Filter::contains(QString text) {
     this->text = text;
     return *this;
+}
+
+QString LogEntry::toString() const {
+    return dateTime.toString(Qt::ISODateWithMs) + " " + level.getName() + " - " + module + " : " + text;
 }
