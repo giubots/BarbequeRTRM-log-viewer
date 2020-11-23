@@ -27,6 +27,6 @@ private:
     Ui::MainWindow *ui;
     Controller contr;
 private:
-    void updateTable(QList<LogEntry> entries);
+    void updateTable(Filter filter);
 };
 #endif // MAINWINDOW_H
