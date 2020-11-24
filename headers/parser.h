@@ -9,16 +9,6 @@
 #define BLV_ALERT_L "ALERT"
 #define BLV_FATAL_L "FATAL"
 #define BLV_ALWAYS_VISIBLE BLV_DEBUG_L, BLV_INFO_L, BLV_NOTICE_L, BLV_WARN_L, BLV_ERROR_L, BLV_CRIT_L, BLV_ALERT_L, BLV_FATAL_L
-/*//TODO implement colors
-const LogLevel LogLevel::DEBUG = LogLevel("DEBUG", Qt::black);
-const LogLevel LogLevel::INFO = LogLevel("INFO", Qt::green);
-const LogLevel LogLevel::NOTICE = LogLevel("NOTICE", Qt::blue);
-const LogLevel LogLevel::WARN = LogLevel("WARN", Qt::yellow);
-const LogLevel LogLevel::ERROR = LogLevel("ERROR", Qt::darkRed);
-const LogLevel LogLevel::CRIT = LogLevel("CRIT", Qt::darkRed);
-const LogLevel LogLevel::ALERT = LogLevel("ALERT", Qt::darkYellow);
-const LogLevel LogLevel::FATAL = LogLevel("FATAL", Qt::red);
-*/
 #endif
 
 #ifndef CONTROLLER_H

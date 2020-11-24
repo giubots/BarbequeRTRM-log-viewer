@@ -4,7 +4,7 @@
 #include <QDebug>
 
 Parser::Parser(QTextStream &logContents)
-    : levelLabels({BLV_ALWAYS_VISIBLE}) {
+    : levelLabels({BLV_ALWAYS_VISIBLE}) {//TODO maybe should be in order
     parse(logContents);
 }
 
