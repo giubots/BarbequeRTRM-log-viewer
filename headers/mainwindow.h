@@ -17,6 +17,7 @@ class MainWindow : public QMainWindow
 private:
     Ui::MainWindow *ui;
     QStandardItemModel *levelModel;
+    QStandardItemModel *moduleModel;
     EntriesModel *entriesModel;
     Filter *filter;
 public:
@@ -29,5 +30,7 @@ private slots:
     void on_resetButton_clicked();//TODO (&seq) change to programmatic? connect?
     void on_filterEdit_textEdited(const QString &text);//TODO (&seq) change to programmatic? connect?
     void levelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void moduleChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void on_sinceEdit_dateTimeChanged(const QDateTime &dateTime);//TODO (&seq) change to programmatic? connect? Implement until
 };
 #endif // MAINWINDOW_H

@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , levelModel(new QStandardItemModel)
+    , moduleModel(new QStandardItemModel)
     , entriesModel(new EntriesModel(this))
     , filter(new Filter()) {
     ui->setupUi(this);
@@ -21,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow() {
     delete ui;
     delete levelModel;
+    delete moduleModel;
     delete entriesModel;
     delete filter;
 }
@@ -43,6 +45,7 @@ void MainWindow::on_openButton_clicked() {
 
             filter->clear();
             ui->filterEdit->clear();
+            ui->sinceEdit->setDateTime(QDateTime());//TODO: fix
 
             delete entriesModel;
             entriesModel = new EntriesModel(parser.getEntries(), this);
@@ -51,7 +54,7 @@ void MainWindow::on_openButton_clicked() {
 
             delete levelModel;
             auto levels = parser.getLevelLables().values();
-            levelModel = new QStandardItemModel(levels.size()+1, 1);
+            levelModel = new QStandardItemModel(levels.size()+1, 1);//TODO: dropdown menu is too narrow (also for levels)
             levelModel ->setItem(0, 0, new QStandardItem(tr("Level: ")));
             for (int i = 0; i < levels.size(); ++i) {
                 auto item = new QStandardItem();
@@ -63,6 +66,22 @@ void MainWindow::on_openButton_clicked() {
             connect(levelModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
                     this, SLOT(levelChanged(const QModelIndex&, const QModelIndex&)));
             ui->levelDropdown->setModel(levelModel);
+
+            delete moduleModel;
+            auto modules = parser.getModuleLables().values();
+            moduleModel = new QStandardItemModel(modules.size()+1, 1);
+            moduleModel ->setItem(0, 0, new QStandardItem(tr("Module: ")));
+            for (int i = 0; i < modules.size(); ++i) {
+                auto item = new QStandardItem();
+                item->setText(modules[i]);
+                item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+                item->setData(Qt::Checked, Qt::CheckStateRole);
+                moduleModel ->setItem(i+1, 0, item);
+            }
+            connect(moduleModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
+                    this, SLOT(moduleChanged(const QModelIndex&, const QModelIndex&)));
+            ui->moduleDropdown->setModel(moduleModel);
+
         } else qDebug() << "Impossible to open: " << fileName;
         inputFile.close();
     }
@@ -70,7 +89,9 @@ void MainWindow::on_openButton_clicked() {
 
 void MainWindow::on_resetButton_clicked() {
     ui->filterEdit->clear();
+    ui->sinceEdit->setDateTime(QDateTime());//TODO: clear here and impement reset/remove
     for(int i = 1; i < levelModel->rowCount(); ++i) levelModel->item(i)->setData(Qt::Checked, Qt::CheckStateRole);
+    for(int i = 1; i < moduleModel->rowCount(); ++i) moduleModel->item(i)->setData(Qt::Checked, Qt::CheckStateRole);
     filter->clear();
     updateTable();
 }
@@ -93,5 +114,26 @@ void MainWindow::levelChanged(const QModelIndex &topLeft, const QModelIndex &bot
     default:
         break;
     }
+    updateTable();
+}
+
+void MainWindow::moduleChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight) {
+    Q_UNUSED(bottomRight);
+    QStandardItem* item = moduleModel->item(topLeft.row());
+    switch (item->checkState()) {
+    case Qt::Unchecked:
+        filter->hideModule(item->text());
+        break;
+    case Qt::Checked:
+        filter->showModule(item->text());
+        break;
+    default:
+        break;
+    }
+    updateTable();
+}
+
+void MainWindow::on_sinceEdit_dateTimeChanged(const QDateTime &dateTime) {
+    filter->setSince(dateTime);
     updateTable();
 }
