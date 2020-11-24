@@ -43,3 +43,7 @@ QVariant EntriesModel::data(const QModelIndex &index, int role) const {
     }
     return QVariant();
 }
+
+const QVector<LogEntry> &EntriesModel::getEntries() const {
+    return entries;
+}

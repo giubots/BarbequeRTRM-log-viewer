@@ -1,7 +1,8 @@
 #ifndef FILTER_H
 #define FILTER_H
 
-#include <QDateTime>
+#include "entriesModel.h"
+
 #include <QSet>
 
 class Filter {
@@ -23,7 +24,7 @@ public:
     Filter &setContains(const QString &contains);
     Filter &removeContains();
     Filter &clear();
-    //TODO: add filter method
+    bool toHide(const LogEntry &entry) const;
 };
 
 #endif // FILTER_H

@@ -18,7 +18,7 @@ const LogLevel LogLevel::ERROR = LogLevel("ERROR", Qt::darkRed);
 const LogLevel LogLevel::CRIT = LogLevel("CRIT", Qt::darkRed);
 const LogLevel LogLevel::ALERT = LogLevel("ALERT", Qt::darkYellow);
 const LogLevel LogLevel::FATAL = LogLevel("FATAL", Qt::red);
- */
+*/
 #endif
 
 #ifndef CONTROLLER_H
@@ -36,9 +36,9 @@ private:
     QSet<QString> moduleLabels;
 public:
     Parser(QTextStream &logContents);
-    QVector<LogEntry> &getEntries();
-    QSet<QString> &getLevelLables();
-    QSet<QString> &getModuleLables();
+    const QVector<LogEntry> &getEntries() const;
+    const QSet<QString> &getLevelLables() const;
+    const QSet<QString> &getModuleLables() const;
 private:
     void parse(QTextStream &logContents);
 };

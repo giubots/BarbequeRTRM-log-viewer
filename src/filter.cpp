@@ -59,3 +59,11 @@ Filter &Filter::clear() {
     contains = "";
     return *this;
 }
+
+bool Filter::toHide(const LogEntry &entry) const {
+    return ((since.isValid() && entry.dateTime < since)
+            || (until.isValid() && entry.dateTime > until)
+            || levelsBlacklist.contains(entry.level)
+            || modulesBlacklist.contains(entry.module)
+            || !entry.text.contains(contains));
+}

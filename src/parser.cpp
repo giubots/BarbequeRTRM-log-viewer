@@ -4,19 +4,19 @@
 #include <QDebug>
 
 Parser::Parser(QTextStream &logContents)
-    : moduleLabels({BLV_ALWAYS_VISIBLE}) {
+    : levelLabels({BLV_ALWAYS_VISIBLE}) {
     parse(logContents);
 }
 
-QVector<LogEntry> &Parser::getEntries() {
+const QVector<LogEntry> &Parser::getEntries() const{
     return entries;
 }
 
-QSet<QString> &Parser::getLevelLables() {
+const QSet<QString> &Parser::getLevelLables() const{
     return levelLabels;
 }
 
-QSet<QString> &Parser::getModuleLables() {
+const QSet<QString> &Parser::getModuleLables() const{
     return moduleLabels;
 }
 
@@ -50,7 +50,7 @@ void Parser::parse(QTextStream &logContents) {
         auto module = match.captured("module");
 
         // Remove color formattation from the message if necessary: any char followed by [ then a not empty sequence of digits or ';' and an m
-        auto text = line.mid(match.capturedLength(0)).remove(QRegularExpression(".\[[0-9;]+m"));
+        auto text = line.mid(match.capturedLength(0)).remove(QRegularExpression(".\[[0-9;]+m")); //TODO: check
 
         entries << LogEntry{dateTime, level, module, text};
         moduleLabels << module;
