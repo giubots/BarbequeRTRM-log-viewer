@@ -49,6 +49,18 @@ Filter &Filter::onlyLevels(QSet<LogLevel> levels) {
     return *this;
 }
 
+Filter &Filter::addLevel(LogLevel level)
+{
+    levels << level;
+    return *this;
+}
+
+Filter &Filter::removeLevel(LogLevel level)
+{
+    levels.remove(level);
+    return *this;
+}
+
 Filter &Filter::onlyModules(QSet<QString> modules) {
     this->modules = modules;
     return *this;

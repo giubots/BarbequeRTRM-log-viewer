@@ -23,6 +23,16 @@ QSet<QString> Controller::getModules() {return moduleLabels;}
 
 QSet<QString> Controller::getLevels() {return levelLabels;}
 
+QStringList Controller::getLevelLables()
+{
+    return QStringList() << "DEBUG" << "INFO" << "NOTICE" << "WARN" << "ERROR" << "CRIT" << "ALERT" << "FATAL";//TODO: add other
+}
+
+QStringList Controller::getModuleLables()
+{
+    return moduleLabels.values();
+}
+
 Controller::Controller() {}
 
 void Controller::parse(QTextStream &logContents) {
@@ -56,8 +66,8 @@ void Controller::parse(QTextStream &logContents) {
         LogLevel level = LogLevel::fromString(match.captured("level"));
         QString module = match.captured("module");
 
-        // Remove color formattation from the message if necessary: any char followed by [ then a not empty sequence of digits and an m
-        QString message = line.mid(match.capturedLength(0)).replace(QRegularExpression(".\[[0-9]+m"), "");
+        // Remove color formattation from the message if necessary: any char followed by [ then a not empty sequence of digits or ';' and an m
+        QString message = line.mid(match.capturedLength(0)).replace(QRegularExpression(".\[[0-9;]+m"), "");
 
         entries << LogEntry({dateTime, level, module, message});
         moduleLabels << module;

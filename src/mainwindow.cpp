@@ -6,11 +6,14 @@
 #include <QFile>
 #include <QDebug>
 #include <QFileDialog>
+#include <QStandardItemModel>
+#include <QMetaType>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , contr(EmptyController()) {
+    , contr(EmptyController())
+    , filter() {
     ui->setupUi(this);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::ResizeToContents);
 }
@@ -21,8 +24,8 @@ MainWindow::~MainWindow() {
 
 
 void MainWindow::on_openButton_clicked() {
-    QString fileName = QFileDialog::getOpenFileName(this);
-    //QString fileName = "/home/giubots/Desktop/bbque.log";
+    //QString fileName = QFileDialog::getOpenFileName(this);
+    QString fileName = "/home/giubots/Desktop/bbque.log";
 
     if (!fileName.isEmpty()) {
         QFile inputFile(fileName);
@@ -32,6 +35,7 @@ void MainWindow::on_openButton_clicked() {
         } else qDebug() << "Impossible to open: " << fileName;
         inputFile.close();
     }
+
     QList<LogEntry> entries = contr.getFiltered();
     ui->tableWidget->setColumnCount(4);
     ui->tableWidget->setRowCount(entries.size());
@@ -42,9 +46,25 @@ void MainWindow::on_openButton_clicked() {
         ui->tableWidget->setItem(i, 2, new QTableWidgetItem(entry.module));
         ui->tableWidget->setItem(i, 3, new QTableWidgetItem(entry.text));
     }
+
+
+    auto levels = contr.getLevelLables();
+    auto model = new QStandardItemModel(levels.size()+1, 1);
+    for (int i = 0; i < levels.size(); ++i)
+    {
+        auto item = new QStandardItem();
+        item->setText(levels.at(i));
+        item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+        item->setData(Qt::Checked, Qt::CheckStateRole);
+        model->setItem(i+1, 0, item);
+    }
+    model->setItem(0, 0, new QStandardItem(tr("Level: ")));
+
+    connect(model, SIGNAL(dataChanged ( const QModelIndex&, const QModelIndex&)), this, SLOT(slot_changed(const QModelIndex&, const QModelIndex&)));
+    ui->levelDropdown->setModel(model);
 }
 
-void MainWindow::updateTable(Filter filter) {
+void MainWindow::updateTable() {
     for( int i = 0; i < ui->tableWidget->rowCount(); ++i ) {
         bool keep = true;
 
@@ -65,9 +85,27 @@ void MainWindow::updateTable(Filter filter) {
 
 void MainWindow::on_resetButton_clicked() {
     ui->filterEdit->clear();
-    updateTable(Filter());
+    ui->levelDropdown->setCurrentIndex(-1);
+    updateTable();
 }
 
 void MainWindow::on_filterEdit_textEdited(const QString &text) {
-    updateTable(Filter().contains(text));
+    filter.contains(text);
+    updateTable();
 }
+
+void MainWindow::slot_changed(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+{
+    Q_UNUSED(bottomRight);
+    QStandardItem* item = ((QStandardItemModel*) topLeft.model())->item(topLeft.row());
+    switch (item->checkState()) {
+    case Qt::Unchecked: filter = filter.removeLevel(LogLevel::fromString(item->text()));
+        break;
+    case Qt::Checked: filter = filter.addLevel(LogLevel::fromString(item->text()));
+        break;
+    default:
+        break;
+    }
+    updateTable();
+}
+

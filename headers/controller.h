@@ -15,6 +15,8 @@ public:
     virtual QList<LogEntry> getFiltered(const Filter &filter = Filter());
     virtual QSet<QString> getModules();
     virtual QSet<QString> getLevels();
+    QStringList getLevelLables();
+    QStringList getModuleLables();
 protected:
     Controller();
 private:

@@ -39,11 +39,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="levelDropdown">
-        <property name="placeholderText">
-         <string>Level</string>
-        </property>
-       </widget>
+       <widget class="QComboBox" name="levelDropdown"/>
       </item>
       <item>
        <widget class="QComboBox" name="moduleDropdown">
@@ -53,18 +49,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="dateButton">
-        <property name="text">
-         <string>Date</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="timeButton">
-        <property name="text">
-         <string>Time</string>
-        </property>
-       </widget>
+       <widget class="QDateTimeEdit" name="dateTimeEdit"/>
       </item>
       <item>
        <widget class="QPushButton" name="resetButton">

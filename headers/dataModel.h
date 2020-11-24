@@ -50,6 +50,8 @@ public:
     Filter& since(QDateTime startDateTime);
     Filter& until(QDateTime endDateTime);
     Filter& onlyLevels(QSet<LogLevel> levels);
+    Filter& addLevel(LogLevel level);
+    Filter& removeLevel(LogLevel level);
     Filter& onlyModules(QSet<QString> modules);
     Filter& contains(QString text);
 };

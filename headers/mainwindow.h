@@ -23,10 +23,13 @@ private slots:
 
     void on_filterEdit_textEdited(const QString &arg1);
 
+      void slot_changed(const QModelIndex&, const QModelIndex&);
+
 private:
     Ui::MainWindow *ui;
     Controller contr;
+    Filter filter;
 private:
-    void updateTable(Filter filter);
+    void updateTable();
 };
 #endif // MAINWINDOW_H
