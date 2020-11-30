@@ -56,7 +56,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QDateTimeEdit" name="sinceEdit"/>
+       <widget class="QDateTimeEdit" name="sinceEdit">
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_2">
@@ -85,12 +89,6 @@
       <property name="showGrid">
        <bool>false</bool>
       </property>
-      <attribute name="horizontalHeaderVisible">
-       <bool>false</bool>
-      </attribute>
-      <attribute name="horizontalHeaderStretchLastSection">
-       <bool>true</bool>
-      </attribute>
       <attribute name="verticalHeaderVisible">
        <bool>false</bool>
       </attribute>

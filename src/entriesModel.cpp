@@ -28,7 +28,7 @@ int EntriesModel::rowCount(const QModelIndex &parent) const {
 }
 
 int EntriesModel::columnCount(const QModelIndex &parent) const {
-    return parent.isValid() ? 0 : 5;
+    return parent.isValid() ? 0 : 4;
 }
 
 QVariant EntriesModel::data(const QModelIndex &index, int role) const {
@@ -59,6 +59,22 @@ QVariant EntriesModel::data(const QModelIndex &index, int role) const {
     case Qt::BackgroundRole: return QColor(Qt::black);
     default: return QVariant();
     }
+}
+
+QVariant EntriesModel::headerData(int section, Qt::Orientation orientation, int role) const {
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    if (orientation == Qt::Horizontal) {
+        switch (section) {
+        case 0: return tr("Date");
+        case 1: return tr("Level");
+        case 2: return tr("Module");
+        case 3: return tr("message");
+        default: break;
+        }
+    }
+    return QVariant();
 }
 
 const QVector<LogEntry> &EntriesModel::getEntries() const {

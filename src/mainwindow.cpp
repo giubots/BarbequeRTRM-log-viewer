@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     , filter(new Filter()) {
     ui->setupUi(this);
     //TODO: make hardcoded?
-    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::ResizeToContents);
+    //ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::ResizeToContents);
 }
 
 MainWindow::~MainWindow() {
