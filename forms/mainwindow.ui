@@ -42,35 +42,14 @@
        <widget class="QComboBox" name="levelDropdown"/>
       </item>
       <item>
-       <widget class="QComboBox" name="moduleDropdown">
-        <property name="placeholderText">
-         <string>Module</string>
-        </property>
-       </widget>
+       <widget class="QComboBox" name="moduleDropdown"/>
       </item>
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QCheckBox" name="checkBox">
         <property name="text">
-         <string>Since:</string>
+         <string>Filter time</string>
         </property>
        </widget>
-      </item>
-      <item>
-       <widget class="QDateTimeEdit" name="sinceEdit">
-        <property name="calendarPopup">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Until:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QDateTimeEdit" name="untilEdit"/>
       </item>
       <item>
        <widget class="QPushButton" name="resetButton">
@@ -80,6 +59,44 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item>
+     <widget class="QWidget" name="horizontalWidget" native="true">
+      <layout class="QHBoxLayout" name="timeLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="sinceLabel">
+         <property name="text">
+          <string>Since:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="sinceEdit"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="untilLabel">
+         <property name="text">
+          <string>Until:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="untilEdit"/>
+       </item>
+      </layout>
+     </widget>
     </item>
     <item>
      <widget class="QTableView" name="tableView">

@@ -15,8 +15,10 @@ MainWindow::MainWindow(QWidget *parent)
     , entriesModel(new EntriesModel(this))
     , filter(new Filter()) {
     ui->setupUi(this);
-    //TODO: make hardcoded?
-    //ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::ResizeToContents);
+    ui->horizontalWidget->setVisible(false);
+
+    // Comment-out the next line to allow the user to manually resize the columns.
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::ResizeToContents);
 }
 
 MainWindow::~MainWindow() {
@@ -41,11 +43,9 @@ void MainWindow::on_openButton_clicked() {
         QFile inputFile(fileName);
         if (inputFile.open(QIODevice::ReadOnly)) {
             QTextStream in(&inputFile);
-            auto parser = Parser(in);
+            Parser parser(in);
 
-            filter->clear();
-            ui->filterEdit->clear();
-            ui->sinceEdit->setDateTime(QDateTime());//TODO: fix
+            on_resetButton_clicked();
 
             delete entriesModel;
             entriesModel = new EntriesModel(parser.getEntries(), this);
@@ -89,7 +89,8 @@ void MainWindow::on_openButton_clicked() {
 
 void MainWindow::on_resetButton_clicked() {
     ui->filterEdit->clear();
-    ui->sinceEdit->setDateTime(QDateTime());//TODO: clear here and impement reset/remove
+    ui->sinceEdit->clear();
+    ui->untilEdit->clear();
     for(int i = 1; i < levelModel->rowCount(); ++i) levelModel->item(i)->setData(Qt::Checked, Qt::CheckStateRole);
     for(int i = 1; i < moduleModel->rowCount(); ++i) moduleModel->item(i)->setData(Qt::Checked, Qt::CheckStateRole);
     filter->clear();
@@ -98,6 +99,16 @@ void MainWindow::on_resetButton_clicked() {
 
 void MainWindow::on_filterEdit_textEdited(const QString &text) {
     filter->setContains(text);
+    updateTable();
+}
+
+void MainWindow::on_sinceEdit_textEdited(const QString &text) {
+    filter->setSince(QDateTime::fromString(text, Qt::DateFormat::ISODateWithMs));
+    updateTable();
+}
+
+void MainWindow::on_untilEdit_textEdited(const QString &text) {
+    filter->setUntil(QDateTime::fromString(text, Qt::DateFormat::ISODateWithMs));
     updateTable();
 }
 
@@ -133,7 +144,20 @@ void MainWindow::moduleChanged(const QModelIndex &topLeft, const QModelIndex &bo
     updateTable();
 }
 
-void MainWindow::on_sinceEdit_dateTimeChanged(const QDateTime &dateTime) {
-    filter->setSince(dateTime);
+void MainWindow::on_checkBox_stateChanged(int state) {
+    switch (state) {
+    case Qt::Unchecked:
+        filter->removeSince();
+        filter->removeUntil();
+        ui->sinceEdit->clear();
+        ui->untilEdit->clear();
+        ui->horizontalWidget->setVisible(false);
+        break;
+    case Qt::Checked:
+        ui->horizontalWidget->setVisible(true);
+        break;
+    default:
+        break;
+    }
     updateTable();
 }
