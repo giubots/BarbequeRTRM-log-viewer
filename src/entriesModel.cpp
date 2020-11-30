@@ -38,7 +38,7 @@ QVariant EntriesModel::data(const QModelIndex &index, int role) const {
     case Qt::DisplayRole: {
         const auto &entry = entries[index.row()];
         switch (index.column()) {
-        case 0: return entry.dateTime.toString(Qt::DateFormat::ISODateWithMs);
+        case 0: return entry.dateTime.toString("yyyy-MM-dd hh:mm:ss,zzz");
         case 1: return entry.level;
         case 2: return entry.module;
         case 3: return entry.text;
@@ -47,16 +47,16 @@ QVariant EntriesModel::data(const QModelIndex &index, int role) const {
     }
     case Qt::ForegroundRole: {
         const auto &entry = entries[index.row()];
-        if (entry.level == BLV_INFO_L) return QColor(Qt::green);
-        if (entry.level == BLV_NOTICE_L) return QColor(Qt::blue);
-        if (entry.level == BLV_WARN_L) return QColor(Qt::yellow);
-        if (entry.level == BLV_ERROR_L) return QColor(Qt::darkRed);
-        if (entry.level == BLV_CRIT_L) return QColor(Qt::darkRed);
-        if (entry.level == BLV_ALERT_L) return QColor(Qt::darkYellow);
-        if (entry.level == BLV_FATAL_L) return QColor(Qt::red);
+        if (entry.level == BLV_INFO_L) return QColor(17, 209, 22); //Green
+        if (entry.level == BLV_NOTICE_L) return QColor(26, 188, 156); //Cyan
+        if (entry.level == BLV_WARN_L) return QColor(253, 188, 75); //Yellow
+        if (entry.level == BLV_ERROR_L) return QColor(155, 89, 182); //Purple
+        if (entry.level == BLV_CRIT_L) return QColor(155, 89, 182); //Purple
+        if (entry.level == BLV_ALERT_L) return QColor(246, 116, 0); //Light red - orange
+        if (entry.level == BLV_FATAL_L) return QColor(192, 57, 43); //Red
         return QColor(Qt::white);
     }
-    case Qt::BackgroundRole: return QColor(Qt::black);
+    case Qt::BackgroundRole: return QColor(35, 38, 39);
     default: return QVariant();
     }
 }

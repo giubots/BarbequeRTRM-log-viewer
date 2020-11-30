@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     , filter(new Filter()) {
     ui->setupUi(this);
     ui->horizontalWidget->setVisible(false);
+    ui->tableView->setPalette(QPalette(QColor(35, 38, 39)));
 
     // Comment-out the next line to allow the user to manually resize the columns.
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::ResizeToContents);
