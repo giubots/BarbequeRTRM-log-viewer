@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     , filter(new Filter()) {
     ui->setupUi(this);
     ui->horizontalWidget->setVisible(false);
-    ui->tableView->setPalette(QPalette(QColor(35, 38, 39)));
+    ui->tableView->setModel(entriesModel);
 
     // Comment-out the next line to allow the user to manually resize the columns.
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::ResizeToContents);
@@ -30,7 +30,7 @@ MainWindow::~MainWindow() {
     delete filter;
 }
 
-void MainWindow::updateTable() {
+void MainWindow::updateTable() {//TODO: move to model
     auto entries = entriesModel->getEntries();
     for(int i = 0; i < entries.size(); ++i)
         ui->tableView->setRowHidden(i, filter->toHide(entries[i]));
@@ -39,12 +39,12 @@ void MainWindow::updateTable() {
 
 void MainWindow::on_openButton_clicked() {
     QString fileName = QFileDialog::getOpenFileName(this);
-    //QString fileName = "/home/giubots/Desktop/bbque.log";
     if (!fileName.isEmpty()) {
         QFile inputFile(fileName);
         if (inputFile.open(QIODevice::ReadOnly)) {
             QTextStream in(&inputFile);
-            Parser parser(in);
+            Parser parser;
+            parser.parse(in);//TODO: check if issue
 
             on_resetButton_clicked();
 
@@ -54,8 +54,8 @@ void MainWindow::on_openButton_clicked() {
             updateTable();
 
             delete levelModel;
-            auto levels = parser.getLevelLables().values();
-            levelModel = new QStandardItemModel(levels.size()+1, 1);//TODO: dropdown menu is too narrow (also for levels)
+            auto levels = parser.getLevelLables();
+            levelModel = new QStandardItemModel(levels.size()+1, 1);
             levelModel ->setItem(0, 0, new QStandardItem(tr("Level: ")));
             for (int i = 0; i < levels.size(); ++i) {
                 auto item = new QStandardItem();
@@ -103,6 +103,25 @@ void MainWindow::on_filterEdit_textEdited(const QString &text) {
     updateTable();
 }
 
+
+void MainWindow::on_checkBox_stateChanged(int state) {
+    switch (state) {
+    case Qt::Unchecked:
+        filter->removeSince();
+        filter->removeUntil();
+        ui->sinceEdit->clear();
+        ui->untilEdit->clear();
+        ui->horizontalWidget->setVisible(false);
+        break;
+    case Qt::Checked:
+        ui->horizontalWidget->setVisible(true);
+        break;
+    default:
+        break;
+    }
+    updateTable();
+}
+
 void MainWindow::on_sinceEdit_textEdited(const QString &text) {
     filter->setSince(QDateTime::fromString(text, Qt::DateFormat::ISODateWithMs));
     updateTable();
@@ -145,20 +164,3 @@ void MainWindow::moduleChanged(const QModelIndex &topLeft, const QModelIndex &bo
     updateTable();
 }
 
-void MainWindow::on_checkBox_stateChanged(int state) {
-    switch (state) {
-    case Qt::Unchecked:
-        filter->removeSince();
-        filter->removeUntil();
-        ui->sinceEdit->clear();
-        ui->untilEdit->clear();
-        ui->horizontalWidget->setVisible(false);
-        break;
-    case Qt::Checked:
-        ui->horizontalWidget->setVisible(true);
-        break;
-    default:
-        break;
-    }
-    updateTable();
-}

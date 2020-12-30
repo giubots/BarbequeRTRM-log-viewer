@@ -3,24 +3,24 @@
 #include <QRegularExpression>
 #include <QDebug>
 
-Parser::Parser(QTextStream &logContents)
-    : levelLabels({BLV_ALWAYS_VISIBLE}) {//TODO maybe should be in order
-    parse(logContents);
-}
+Parser::Parser()
+    : levelLabels({BLV_ALWAYS_VISIBLE}) {}
 
-const QVector<LogEntry> &Parser::getEntries() const{
+const QVector<LogEntry> &Parser::getEntries() const {
     return entries;
 }
 
-const QSet<QString> &Parser::getLevelLables() const{
+const QVector<QString> &Parser::getLevelLables() const {
     return levelLabels;
 }
 
-const QSet<QString> &Parser::getModuleLables() const{
+const QSet<QString> &Parser::getModuleLables() const {
     return moduleLabels;
 }
 
-void Parser::parse(QTextStream &logContents) {
+bool Parser::parse(QTextStream &logContents) {
+    auto success = true;
+
     //Parse each line in the file
     while (!logContents.atEnd()) {
         auto line = logContents.readLine();
@@ -42,6 +42,7 @@ void Parser::parse(QTextStream &logContents) {
 
         if (!match.hasMatch()) {
             qDebug() << "Impossible to parse: " << line;
+            success = false;
             continue;
         }
 
@@ -53,7 +54,9 @@ void Parser::parse(QTextStream &logContents) {
         auto text = line.mid(match.capturedLength(0)).remove(QRegularExpression(".\[[0-9;]+m")); //TODO: check
 
         entries << LogEntry{dateTime, level, module, text};
+        if (!levelLabels.contains(level)) levelLabels << level;
         moduleLabels << module;
-        levelLabels << level;
     }
+
+    return success;
 }

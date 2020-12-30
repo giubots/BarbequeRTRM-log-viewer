@@ -2,22 +2,43 @@
 #include <headers/parser.h>
 
 #include <QColor>
+#include <QtDebug>
 
+const QString LogEntry::DATE_FORMAT = "yyyy-MM-dd hh:mm:ss,zzz";
+
+LogEntry::LogEntry(QDateTime &dateTime, QString &level, QString &module, QString &message)
+    : dateTime(dateTime)
+    , level(level)
+    , module(module)
+    , message(message) {}
+
+LogEntry::LogEntry(const LogEntry &other)
+    : dateTime(other.dateTime)
+    , level(other.level)
+    , module(other.module)
+    , message(other.message) {}
 
 QString LogEntry::toString() const {
-    return dateTime.toString(Qt::ISODateWithMs) + " " + level + " - " + module + " : " + text;
+    return dateTime.toString(Qt::ISODateWithMs) + " - " + level + " " + module + " : " + message;
 }
 
 bool LogEntry::operator==(const LogEntry &other) const {
-    return dateTime == other.dateTime && level == other.level && module == other.module && text == other.text;
+    return dateTime == other.dateTime && level == other.level && module == other.module && message == other.message;
+}
+
+LogEntry &LogEntry::operator=(const LogEntry &other) {
+    LogEntry temp(other);
+    std::swap(*this, temp);
+    return *this;
 }
 
 QDataStream &operator<<(QDataStream &stream, const LogEntry &entry) {
-    return stream << entry.dateTime << entry.level << entry.module << entry.text;
+    return stream << entry.toString();
 }
 
 EntriesModel::EntriesModel(QObject *parent)
-    : QAbstractTableModel(parent) {}
+    : QAbstractTableModel(parent)
+    , entries() {}
 
 EntriesModel::EntriesModel(const QVector<LogEntry> &entries, QObject *parent)
     : QAbstractTableModel(parent)
@@ -38,10 +59,10 @@ QVariant EntriesModel::data(const QModelIndex &index, int role) const {
     case Qt::DisplayRole: {
         const auto &entry = entries[index.row()];
         switch (index.column()) {
-        case 0: return entry.dateTime.toString("yyyy-MM-dd hh:mm:ss,zzz");
+        case 0: return entry.dateTime.toString(LogEntry::DATE_FORMAT);
         case 1: return entry.level;
         case 2: return entry.module;
-        case 3: return entry.text;
+        case 3: return entry.message;
         default: return QVariant();
         }
     }
@@ -56,21 +77,19 @@ QVariant EntriesModel::data(const QModelIndex &index, int role) const {
         if (entry.level == BLV_FATAL_L) return QColor(192, 57, 43); //Red
         return QColor(Qt::white);
     }
-    case Qt::BackgroundRole: return QColor(35, 38, 39);
     default: return QVariant();
     }
 }
 
 QVariant EntriesModel::headerData(int section, Qt::Orientation orientation, int role) const {
-    if (role != Qt::DisplayRole)
-        return QVariant();
+    if (role != Qt::DisplayRole) return QVariant();
 
     if (orientation == Qt::Horizontal) {
         switch (section) {
         case 0: return tr("Date");
         case 1: return tr("Level");
         case 2: return tr("Module");
-        case 3: return tr("message");
+        case 3: return tr("Message");
         default: break;
         }
     }
@@ -80,3 +99,17 @@ QVariant EntriesModel::headerData(int section, Qt::Orientation orientation, int 
 const QVector<LogEntry> &EntriesModel::getEntries() const {
     return entries;
 }
+
+void EntriesModel::appendData(const LogEntry &value) {
+    beginInsertRows(QModelIndex(), entries.size()+1, entries.size()+1);
+    entries.append(value);
+    endInsertRows();
+}
+
+void EntriesModel::clear() {
+    beginResetModel();
+    entries.clear();
+    endResetModel();
+}
+
+

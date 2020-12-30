@@ -12,6 +12,7 @@ private:
     QSet<QString> levelsBlacklist;
     QSet<QString> modulesBlacklist;
     QString contains;
+
 public:
     Filter &setSince(const QDateTime &since);
     Filter &removeSince();

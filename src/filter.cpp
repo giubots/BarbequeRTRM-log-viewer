@@ -52,11 +52,11 @@ Filter &Filter::removeContains() {
 }
 
 Filter &Filter::clear() {
-    since = QDateTime();
-    until = QDateTime();
+    removeSince();
+    removeUntil();
     levelsBlacklist.clear();
     modulesBlacklist.clear();
-    contains = "";
+    removeContains();
     return *this;
 }
 
@@ -65,5 +65,5 @@ bool Filter::toHide(const LogEntry &entry) const {
             || (until.isValid() && entry.dateTime > until)
             || levelsBlacklist.contains(entry.level)
             || modulesBlacklist.contains(entry.module)
-            || !entry.text.contains(contains));
+            || !entry.message.contains(contains));
 }

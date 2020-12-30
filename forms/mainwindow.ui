@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Barbeque Log Visualizer</string>
+   <string>BarbequeRTRM Log Viewer</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -39,10 +39,18 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="levelDropdown"/>
+       <widget class="QComboBox" name="levelDropdown">
+        <property name="minimumContentsLength">
+         <number>10</number>
+        </property>
+       </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="moduleDropdown"/>
+       <widget class="QComboBox" name="moduleDropdown">
+        <property name="minimumContentsLength">
+         <number>15</number>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="checkBox">
@@ -100,6 +108,43 @@
     </item>
     <item>
      <widget class="QTableView" name="tableView">
+      <property name="palette">
+       <palette>
+        <active>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>35</red>
+            <green>38</green>
+            <blue>39</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </active>
+        <inactive>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>35</red>
+            <green>38</green>
+            <blue>39</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </inactive>
+        <disabled>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>239</red>
+            <green>240</green>
+            <blue>241</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </disabled>
+       </palette>
+      </property>
       <property name="editTriggers">
        <set>QAbstractItemView::NoEditTriggers</set>
       </property>

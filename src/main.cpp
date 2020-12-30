@@ -26,4 +26,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     return a.exec();
+
+
+    //TODO: shortcuts, regex, exceptions, highlight/filter, deselect all, command line
 }
