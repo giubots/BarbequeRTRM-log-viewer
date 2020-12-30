@@ -19,8 +19,14 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QPushButton" name="openButton">
+        <property name="toolTip">
+         <string>Open a new log file</string>
+        </property>
         <property name="text">
          <string>Open</string>
+        </property>
+        <property name="shortcut">
+         <string>Ctrl+O</string>
         </property>
        </widget>
       </item>
@@ -33,6 +39,9 @@
       </item>
       <item>
        <widget class="QLineEdit" name="filterEdit">
+        <property name="toolTip">
+         <string>Filter entries containing this text in the message</string>
+        </property>
         <property name="placeholderText">
          <string>Type here to filter...</string>
         </property>
@@ -40,6 +49,9 @@
       </item>
       <item>
        <widget class="QComboBox" name="levelDropdown">
+        <property name="toolTip">
+         <string>Show or hide entries based on the log level</string>
+        </property>
         <property name="minimumContentsLength">
          <number>10</number>
         </property>
@@ -47,6 +59,9 @@
       </item>
       <item>
        <widget class="QComboBox" name="moduleDropdown">
+        <property name="toolTip">
+         <string>Show or hide entries based on the module</string>
+        </property>
         <property name="minimumContentsLength">
          <number>15</number>
         </property>
@@ -54,15 +69,24 @@
       </item>
       <item>
        <widget class="QCheckBox" name="checkBox">
+        <property name="toolTip">
+         <string>Show the tools to filter the date</string>
+        </property>
         <property name="text">
-         <string>Filter time</string>
+         <string>Filter date</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="resetButton">
+        <property name="toolTip">
+         <string>Remove all the filters</string>
+        </property>
         <property name="text">
          <string>Reset</string>
+        </property>
+        <property name="shortcut">
+         <string>Ctrl+R</string>
         </property>
        </widget>
       </item>
@@ -91,7 +115,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="sinceEdit"/>
+        <widget class="QLineEdit" name="sinceEdit">
+         <property name="toolTip">
+          <string>Hide the entries before this date</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLabel" name="untilLabel">
@@ -101,7 +129,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="untilEdit"/>
+        <widget class="QLineEdit" name="untilEdit">
+         <property name="toolTip">
+          <string>Hide the entries after this date</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
