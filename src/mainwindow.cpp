@@ -37,7 +37,7 @@ void MainWindow::updateTable() {//TODO: move to model
 }
 
 
-void MainWindow::on_openButton_clicked() {
+void MainWindow::onOpen() {
     QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty()) {
         QFile inputFile(fileName);
@@ -46,7 +46,7 @@ void MainWindow::on_openButton_clicked() {
             Parser parser;
             parser.parse(in);//TODO: check if issue
 
-            on_resetButton_clicked();
+            onReset();
 
             delete entriesModel;
             entriesModel = new EntriesModel(parser.getEntries(), this);
@@ -65,7 +65,7 @@ void MainWindow::on_openButton_clicked() {
                 levelModel ->setItem(i+1, 0, item);
             }
             connect(levelModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
-                    this, SLOT(levelChanged(const QModelIndex&, const QModelIndex&)));
+                    this, SLOT(onLevelChanged(const QModelIndex&, const QModelIndex&)));
             ui->levelDropdown->setModel(levelModel);
 
             delete moduleModel;
@@ -80,7 +80,7 @@ void MainWindow::on_openButton_clicked() {
                 moduleModel ->setItem(i+1, 0, item);
             }
             connect(moduleModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
-                    this, SLOT(moduleChanged(const QModelIndex&, const QModelIndex&)));
+                    this, SLOT(onModuleChanged(const QModelIndex&, const QModelIndex&)));
             ui->moduleDropdown->setModel(moduleModel);
 
         } else qDebug() << "Impossible to open: " << fileName;
@@ -88,7 +88,7 @@ void MainWindow::on_openButton_clicked() {
     }
 }
 
-void MainWindow::on_resetButton_clicked() {
+void MainWindow::onReset() {
     ui->filterEdit->clear();
     ui->sinceEdit->clear();
     ui->untilEdit->clear();
@@ -98,13 +98,13 @@ void MainWindow::on_resetButton_clicked() {
     updateTable();
 }
 
-void MainWindow::on_filterEdit_textEdited(const QString &text) {
+void MainWindow::onFilterText(const QString &text) {
     filter->setContains(text);
     updateTable();
 }
 
 
-void MainWindow::on_checkBox_stateChanged(int state) {
+void MainWindow::onToggleDate(int state) {
     switch (state) {
     case Qt::Unchecked:
         filter->removeSince();
@@ -122,17 +122,17 @@ void MainWindow::on_checkBox_stateChanged(int state) {
     updateTable();
 }
 
-void MainWindow::on_sinceEdit_textEdited(const QString &text) {
+void MainWindow::onSinceEdit(const QString &text) {
     filter->setSince(QDateTime::fromString(text, Qt::DateFormat::ISODateWithMs));
     updateTable();
 }
 
-void MainWindow::on_untilEdit_textEdited(const QString &text) {
+void MainWindow::onUntilEdit(const QString &text) {
     filter->setUntil(QDateTime::fromString(text, Qt::DateFormat::ISODateWithMs));
     updateTable();
 }
 
-void MainWindow::levelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight) {
+void MainWindow::onLevelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight) {
     Q_UNUSED(bottomRight);
     QStandardItem* item = levelModel->item(topLeft.row());
     switch (item->checkState()) {
@@ -148,7 +148,7 @@ void MainWindow::levelChanged(const QModelIndex &topLeft, const QModelIndex &bot
     updateTable();
 }
 
-void MainWindow::moduleChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight) {
+void MainWindow::onModuleChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight) {
     Q_UNUSED(bottomRight);
     QStandardItem* item = moduleModel->item(topLeft.row());
     switch (item->checkState()) {

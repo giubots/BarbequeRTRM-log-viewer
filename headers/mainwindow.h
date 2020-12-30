@@ -29,13 +29,13 @@ private:
     void updateTable();
 
 private slots:
-    void on_openButton_clicked();//TODO (&seq) change to programmatic? connect?
-    void on_resetButton_clicked();//TODO (&seq) change to programmatic? connect?
-    void on_filterEdit_textEdited(const QString &text);//TODO (&seq) change to programmatic? connect?
-    void on_checkBox_stateChanged(int state);//TODO (&seq) change to programmatic? connect?
-    void on_sinceEdit_textEdited(const QString &text);//TODO (&seq) change to programmatic? connect?
-    void on_untilEdit_textEdited(const QString &text);//TODO (&seq) change to programmatic? connect?
-    void levelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
-    void moduleChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void onOpen();
+    void onReset();
+    void onFilterText(const QString &text);
+    void onToggleDate(int state);
+    void onSinceEdit(const QString &text);
+    void onUntilEdit(const QString &text);
+    void onLevelChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void onModuleChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 };
 #endif // MAINWINDOW_H
