@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>data/bbque_red.svg</file>
+    </qresource>
+</RCC>

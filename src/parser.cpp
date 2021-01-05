@@ -1,5 +1,23 @@
-#include "headers/parser.h"
+/*
+ * Copyright (C) 2021 Politecnico di Milano
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Author: Giubots
+ */
 
+#include "headers/parser.h"
 #include <QRegularExpression>
 #include <QDebug>
 
@@ -21,7 +39,7 @@ const QSet<QString> &Parser::getModuleLables() const {
 bool Parser::parse(QTextStream &logContents) {
     auto success = true;
 
-    //Parse each line in the file
+    //Parse each line in the file.
     while (!logContents.atEnd()) {
         auto line = logContents.readLine();
 
@@ -37,7 +55,7 @@ bool Parser::parse(QTextStream &logContents) {
         // follows any char
         // follows a sequence of space or tab
         // the remaining text is the message (to be filtered)
-        QRegularExpression regExp("^(?<dateTime>\\d\\d\\d\\d.\\d\\d.\\d\\d.\\d\\d.\\d\\d.\\d\\d.\\d\\d\\d)\\s+.\\s+(?<level>\\w+)\\s+(?<module>[\\w.]+)\\s+:\\s+");//TODO: move
+        QRegularExpression regExp("^(?<dateTime>\\d\\d\\d\\d.\\d\\d.\\d\\d.\\d\\d.\\d\\d.\\d\\d.\\d\\d\\d)\\s+.\\s+(?<level>\\w+)\\s+(?<module>[\\w.]+)\\s+:\\s+");
         auto match = regExp.match(line);
 
         if (!match.hasMatch()) {
@@ -51,7 +69,7 @@ bool Parser::parse(QTextStream &logContents) {
         auto module = match.captured("module");
 
         // Remove color formattation from the message if necessary: any char followed by [ then a not empty sequence of digits or ';' and an m
-        auto text = line.mid(match.capturedLength(0)).remove(QRegularExpression(".\[[0-9;]+m")); //TODO: check
+        auto text = line.mid(match.capturedLength(0)).remove(QRegularExpression(".\[[0-9;]+m"));
 
         entries << LogEntry{dateTime, level, module, text};
         if (!levelLabels.contains(level)) levelLabels << level;

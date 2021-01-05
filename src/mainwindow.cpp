@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2021 Politecnico di Milano
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Author: Giubots
+ */
+
 #include "headers/mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -14,11 +33,17 @@ MainWindow::MainWindow(QWidget *parent)
     , moduleModel(new QStandardItemModel)
     , entriesModel(new EntriesModel(this))
     , filter(new Filter()) {
+
+    // Initializes the user interface.
     ui->setupUi(this);
+
+    // The date filter toolbar is initially hidden.
     ui->horizontalWidget->setVisible(false);
+
+    // Sets the model for the initially empty table.
     ui->tableView->setModel(entriesModel);
 
-    // Comment-out the next line to allow the user to manually resize the columns.
+    // Comment the next line to allow the user to manually resize the columns.
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::ResizeToContents);
 }
 
@@ -30,7 +55,7 @@ MainWindow::~MainWindow() {
     delete filter;
 }
 
-void MainWindow::updateTable() {//TODO: move to model
+void MainWindow::updateTable() {
     auto entries = entriesModel->getEntries();
     for(int i = 0; i < entries.size(); ++i)
         ui->tableView->setRowHidden(i, filter->toHide(entries[i]));
@@ -38,25 +63,34 @@ void MainWindow::updateTable() {//TODO: move to model
 
 
 void MainWindow::onOpen() {
+    // Show a dialog to choose a file.
     QString fileName = QFileDialog::getOpenFileName(this);
+
+    // Try to open the file and parse its contents.
     if (!fileName.isEmpty()) {
         QFile inputFile(fileName);
         if (inputFile.open(QIODevice::ReadOnly)) {
             QTextStream in(&inputFile);
             Parser parser;
-            parser.parse(in);//TODO: check if issue
+            parser.parse(in);
 
-            onReset();
+            // Remove previous filters.
+            ui->filterEdit->clear();
+            ui->sinceEdit->clear();
+            ui->untilEdit->clear();
+            filter->clear();
 
+            // Set the new entries model.
             delete entriesModel;
             entriesModel = new EntriesModel(parser.getEntries(), this);
             ui->tableView->setModel(entriesModel);
             updateTable();
 
+            // Set the new levels in the dropdown menu.
             delete levelModel;
             auto levels = parser.getLevelLables();
             levelModel = new QStandardItemModel(levels.size()+1, 1);
-            levelModel ->setItem(0, 0, new QStandardItem(tr("Level: ")));
+            levelModel->setItem(0, 0, new QStandardItem(tr("Level: ")));
             for (int i = 0; i < levels.size(); ++i) {
                 auto item = new QStandardItem();
                 item->setText(levels[i]);
@@ -64,10 +98,13 @@ void MainWindow::onOpen() {
                 item->setData(Qt::Checked, Qt::CheckStateRole);
                 levelModel ->setItem(i+1, 0, item);
             }
+
+            // Connect the new level model to the corresponding method.
             connect(levelModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
                     this, SLOT(onLevelChanged(const QModelIndex&, const QModelIndex&)));
             ui->levelDropdown->setModel(levelModel);
 
+            // Set the modules in the dropdown menu.
             delete moduleModel;
             auto modules = parser.getModuleLables().values();
             moduleModel = new QStandardItemModel(modules.size()+1, 1);
@@ -79,6 +116,8 @@ void MainWindow::onOpen() {
                 item->setData(Qt::Checked, Qt::CheckStateRole);
                 moduleModel ->setItem(i+1, 0, item);
             }
+
+            // Connect the new module model to the corresponding method.
             connect(moduleModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
                     this, SLOT(onModuleChanged(const QModelIndex&, const QModelIndex&)));
             ui->moduleDropdown->setModel(moduleModel);

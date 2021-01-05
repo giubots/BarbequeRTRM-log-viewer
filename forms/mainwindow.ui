@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>BarbequeRTRM Log Viewer</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../resources.qrc">
+    <normaloff>:/icons/data/bbque_red.svg</normaloff>:/icons/data/bbque_red.svg</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -191,7 +195,9 @@
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>openButton</sender>
