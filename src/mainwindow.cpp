@@ -25,6 +25,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QFileDialog>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -72,7 +73,13 @@ void MainWindow::onOpen() {
         if (inputFile.open(QIODevice::ReadOnly)) {
             QTextStream in(&inputFile);
             Parser parser;
-            parser.parse(in);
+            auto success = parser.parse(in);
+
+            if (!success) {
+                QMessageBox msgBox;
+                msgBox.setText("Some entries could not be parsed.");
+                msgBox.exec();
+            }
 
             // Remove previous filters.
             ui->filterEdit->clear();
@@ -122,7 +129,12 @@ void MainWindow::onOpen() {
                     this, SLOT(onModuleChanged(const QModelIndex&, const QModelIndex&)));
             ui->moduleDropdown->setModel(moduleModel);
 
-        } else qDebug() << "Impossible to open: " << fileName;
+        } else {
+            qDebug() << "Impossible to open: " << fileName;
+            QMessageBox msgBox;
+            msgBox.setText("Impossible to open the file.");
+            msgBox.exec();
+        }
         inputFile.close();
     }
 }
