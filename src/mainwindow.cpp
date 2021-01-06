@@ -111,9 +111,10 @@ void MainWindow::onOpen() {
                     this, SLOT(onLevelChanged(const QModelIndex&, const QModelIndex&)));
             ui->levelDropdown->setModel(levelModel);
 
-            // Set the modules in the dropdown menu.
+            // Set the modules in the dropdown menu, alphabetically sorted.
             delete moduleModel;
             auto modules = parser.getModuleLables().values();
+            std::sort(modules.begin(), modules.end());
             moduleModel = new QStandardItemModel(modules.size()+1, 1);
             moduleModel ->setItem(0, 0, new QStandardItem(tr("Module: ")));
             for (int i = 0; i < modules.size(); ++i) {
